@@ -13,6 +13,8 @@ public class JSoupParser {
 	private Document doc;
 	private static int textLength;
 	private static int htmlLength;
+	private static float domLevel;
+	private static float maxHeight;
 	
 	public void parseHTML(String html){
 		doc = Jsoup.parse(html);
@@ -52,9 +54,16 @@ public class JSoupParser {
 	}
 	
 	private static void traverse(Element element) {
+		float currentHeight = domLevel; 
 		List<Element> es = element.children();
+		if(es.isEmpty() && domLevel > maxHeight)
+			maxHeight = domLevel;
+		else 
+			domLevel++;
+
 		for(int i = 0; i < es.size(); i++) {
 			Element e = es.get(i);
+			e.attr("domHeight", Float.toString(domLevel));
 			
 			float eHtmlLength = e.html().length();
 			float innerHtml = eHtmlLength/htmlLength;
@@ -107,7 +116,10 @@ public class JSoupParser {
 			e.attr("pNum", Integer.toString(pNum));
 			
 			traverse(e);
+			
+			
 		}
+		domLevel = currentHeight;
 	}
 	
 	public static void main(String[] args) throws IOException{
@@ -117,8 +129,12 @@ public class JSoupParser {
 		textLength = body.text().length();
 		htmlLength = body.html().length();
 //		System.out.println("Body length: " + textLength + "\n" + "Html length: " + htmlLength);
+		domLevel = 1;
+		maxHeight = 0;
 		traverse(body);
 		
+		for(Element e : body.getAllElements())
+			e.attr("domHeight", Float.toString(domLevel/maxHeight));
 		System.out.println(body.outerHtml());
 	}
 }
