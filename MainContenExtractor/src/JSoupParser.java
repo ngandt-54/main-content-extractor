@@ -5,16 +5,38 @@ import java.util.List;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
-import org.jsoup.nodes.Node;
 import org.jsoup.select.Elements;
 
 
 public class JSoupParser {
 	private Document doc;
-	private static int textLength;
-	private static int htmlLength;
+	private static float textLength;
+	private static float htmlLength;
 	private static float domLevel;
 	private static float maxHeight;
+	private static float totalLink;
+	private static float totalDiv;
+	private static float totalInteractive;
+	private static float totalImg;
+	private static float totalForm;
+	private static float totalOption;
+	private static float totalTable;
+	private static float totalP;
+	
+	public JSoupParser() {
+		textLength = 0;
+		htmlLength = 0;
+		domLevel = 1;
+		maxHeight = 0;
+		totalLink = 0;
+		totalDiv = 0;
+		totalInteractive = 0;
+		totalImg = 0;
+		totalForm = 0;
+		totalOption = 0;
+		totalTable = 0;
+		totalP = 0;
+	}
 	
 	public void parseHTML(String html){
 		doc = Jsoup.parse(html);
@@ -53,6 +75,37 @@ public class JSoupParser {
 		return doc.getElementsByTag(tag); 
 	}
 	
+	@SuppressWarnings("unused")
+	private void count() {
+		for(Element select : getElementsByTag("select"))
+			totalInteractive++;
+		
+		for(Element input : getElementsByTag("input"))
+			totalInteractive++;
+		
+		for(Element img : getElementsByTag("img")) 
+			totalImg++;
+		
+		for(Element form : getElementsByTag("form"))
+			totalForm++;
+		
+		for(Element option : getElementsByTag("option"))
+			totalOption++;
+		
+		for(Element option : getElementsByTag("table"))
+			totalTable++;
+		
+		for(Element option : getElementsByTag("div"))
+			totalDiv++;
+		
+		for(Element option : getElementsByTag("link"))
+			totalLink++;
+		
+		for(Element option : getElementsByTag("p"))
+			totalP++;
+	}
+	
+	@SuppressWarnings("unused")
 	private static void traverse(Element element) {
 		float currentHeight = domLevel; 
 		List<Element> es = element.children();
@@ -78,47 +131,46 @@ public class JSoupParser {
 				interactiveNum++;
 			for(Element input : e.getElementsByTag("input"))
 				interactiveNum++;
-			e.attr("interactiveNum", Integer.toString(interactiveNum));
+			e.attr("interactiveNum", Float.toString(interactiveNum/totalInteractive));
 			
 			int imgNum = 0;
 			for(Element img : e.getElementsByTag("img")) 
 				imgNum++;
-			e.attr("imgNum", Integer.toString(imgNum));
+			e.attr("imgNum", Float.toString(imgNum/totalImg));
 			
 			int formNum = 0;
 			for(Element form : e.getElementsByTag("form"))
 				formNum++;
-			e.attr("formNum", Integer.toString(formNum));
+			e.attr("formNum", Float.toString(formNum/totalForm));
 			
 			int optionNum = 0;
 			for(Element option : e.getElementsByTag("option"))
 				optionNum++;
-			e.attr("optionNum", Integer.toString(optionNum));
+			e.attr("optionNum", Float.toString(optionNum/totalOption));
 			
 			int tableNum = 0;
-			for(Element option : e.getElementsByTag("table"))
+			for(Element table : e.getElementsByTag("table"))
 				tableNum++;
-			e.attr("tableNum", Integer.toString(tableNum));
+			e.attr("tableNum", Float.toString(tableNum/totalTable));
 			
 			int divNum = 0;
-			for(Element option : e.getElementsByTag("div"))
-				tableNum++;
-			e.attr("divNum", Integer.toString(divNum));
+			for(Element div : e.getElementsByTag("div"))
+				divNum++;
+			e.attr("divNum", Float.toString(divNum/totalDiv));
 			
 			int linkNum = 0;
-			for(Element option : e.getElementsByTag("link"))
-				tableNum++;
-			e.attr("linkNum", Integer.toString(linkNum));
+			for(Element link : e.getElementsByTag("link"))
+				linkNum++;
+			e.attr("linkNum", Float.toString(linkNum/totalLink));
 			
 			int pNum = 0;
-			for(Element option : e.getElementsByTag("p"))
-				tableNum++;
-			e.attr("pNum", Integer.toString(pNum));
+			for(Element p : e.getElementsByTag("p"))
+				pNum++;
+			e.attr("pNum", Float.toString(pNum/totalP));
 			
 			traverse(e);
-			
-			
 		}
+		
 		domLevel = currentHeight;
 	}
 	
@@ -128,13 +180,13 @@ public class JSoupParser {
 		Element body = parser.getBody();
 		textLength = body.text().length();
 		htmlLength = body.html().length();
-//		System.out.println("Body length: " + textLength + "\n" + "Html length: " + htmlLength);
-		domLevel = 1;
-		maxHeight = 0;
-		traverse(body);
 		
-		for(Element e : body.getAllElements())
+		for(Element e : body.getAllElements()) {
 			e.attr("domHeight", Float.toString(domLevel/maxHeight));
+		}
+		
+		parser.count();
+		traverse(body);
 		System.out.println(body.outerHtml());
 	}
 }
