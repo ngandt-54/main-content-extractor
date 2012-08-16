@@ -1,4 +1,5 @@
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.List;
 
@@ -77,32 +78,15 @@ public class JSoupParser {
 	
 	@SuppressWarnings("unused")
 	private void count() {
-		for(Element select : getElementsByTag("select"))
-			totalInteractive++;
-		
-		for(Element input : getElementsByTag("input"))
-			totalInteractive++;
-		
-		for(Element img : getElementsByTag("img")) 
-			totalImg++;
-		
-		for(Element form : getElementsByTag("form"))
-			totalForm++;
-		
-		for(Element option : getElementsByTag("option"))
-			totalOption++;
-		
-		for(Element option : getElementsByTag("table"))
-			totalTable++;
-		
-		for(Element option : getElementsByTag("div"))
-			totalDiv++;
-		
-		for(Element option : getElementsByTag("link"))
-			totalLink++;
-		
-		for(Element option : getElementsByTag("p"))
-			totalP++;
+		for(Element select : getElementsByTag("select")) { totalInteractive++; }
+		for(Element input : getElementsByTag("input")) { totalInteractive++; }
+		for(Element img : getElementsByTag("img")) { totalImg++; }
+		for(Element form : getElementsByTag("form")) { totalForm++; }
+		for(Element option : getElementsByTag("option")) { totalOption++; }
+		for(Element table : getElementsByTag("table")) { totalTable++; }
+		for(Element div : getElementsByTag("div")) { totalDiv++; }
+		for(Element link : getElementsByTag("link")) { totalLink++; }
+		for(Element p : getElementsByTag("p")) { totalP++; }
 	}
 	
 	@SuppressWarnings("unused")
@@ -127,45 +111,31 @@ public class JSoupParser {
 			e.attr("innerText", Float.toString(innerText));
 			
 			int interactiveNum = 0;
-			for(Element select : e.getElementsByTag("select"))
-				interactiveNum++;
-			for(Element input : e.getElementsByTag("input"))
-				interactiveNum++;
-			e.attr("interactiveNum", Float.toString(interactiveNum/totalInteractive));
-			
 			int imgNum = 0;
-			for(Element img : e.getElementsByTag("img")) 
-				imgNum++;
-			e.attr("imgNum", Float.toString(imgNum/totalImg));
-			
 			int formNum = 0;
-			for(Element form : e.getElementsByTag("form"))
-				formNum++;
-			e.attr("formNum", Float.toString(formNum/totalForm));
-			
 			int optionNum = 0;
-			for(Element option : e.getElementsByTag("option"))
-				optionNum++;
-			e.attr("optionNum", Float.toString(optionNum/totalOption));
-			
 			int tableNum = 0;
-			for(Element table : e.getElementsByTag("table"))
-				tableNum++;
-			e.attr("tableNum", Float.toString(tableNum/totalTable));
-			
 			int divNum = 0;
-			for(Element div : e.getElementsByTag("div"))
-				divNum++;
-			e.attr("divNum", Float.toString(divNum/totalDiv));
-			
 			int linkNum = 0;
-			for(Element link : e.getElementsByTag("link"))
-				linkNum++;
-			e.attr("linkNum", Float.toString(linkNum/totalLink));
-			
 			int pNum = 0;
-			for(Element p : e.getElementsByTag("p"))
-				pNum++;
+			
+			for(Element select : e.getElementsByTag("select")) { interactiveNum++; }
+			for(Element input : e.getElementsByTag("input")) { interactiveNum++; }
+			for(Element img : e.getElementsByTag("img")) { imgNum++; }
+			for(Element form : e.getElementsByTag("form")) { formNum++; }
+			for(Element option : e.getElementsByTag("option")) { optionNum++; }
+			for(Element table : e.getElementsByTag("table")) { tableNum++; }
+			for(Element div : e.getElementsByTag("div")) { divNum++; }
+			for(Element link : e.getElementsByTag("link")) { linkNum++; }
+			for(Element p : e.getElementsByTag("p")) { pNum++; }
+
+			e.attr("interactiveNum", Float.toString(interactiveNum/totalInteractive));
+			e.attr("imgNum", Float.toString(imgNum/totalImg));
+			e.attr("formNum", Float.toString(formNum/totalForm));
+			e.attr("optionNum", Float.toString(optionNum/totalOption));
+			e.attr("tableNum", Float.toString(tableNum/totalTable));
+			e.attr("divNum", Float.toString(divNum/totalDiv));
+			e.attr("linkNum", Float.toString(linkNum/totalLink));
 			e.attr("pNum", Float.toString(pNum/totalP));
 			
 			traverse(e);
@@ -180,13 +150,15 @@ public class JSoupParser {
 		Element body = parser.getBody();
 		textLength = body.text().length();
 		htmlLength = body.html().length();
-		
-		for(Element e : body.getAllElements()) {
-			e.attr("domHeight", Float.toString(domLevel/maxHeight));
-		}
-		
+	
 		parser.count();
-		traverse(body);
+		traverse(body);		
+		for(Element e : body.getAllElements()) 
+			e.attr("domHeight", Float.toString(domLevel/maxHeight));
+	
+		FileOutputStream fout = new FileOutputStream("out.html");
+		fout.write(body.outerHtml().getBytes());
+		
 		System.out.println(body.outerHtml());
 	}
 }
