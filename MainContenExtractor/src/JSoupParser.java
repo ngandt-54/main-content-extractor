@@ -20,7 +20,6 @@ public class JSoupParser {
 	private static float totalInteractive;
 	private static float totalImg;
 	private static float totalForm;
-	private static float totalOption;
 	private static float totalTable;
 	private static float totalP;
 	
@@ -34,7 +33,6 @@ public class JSoupParser {
 		totalInteractive = 0;
 		totalImg = 0;
 		totalForm = 0;
-		totalOption = 0;
 		totalTable = 0;
 		totalP = 0;
 	}
@@ -82,7 +80,6 @@ public class JSoupParser {
 		for(Element input : getElementsByTag("input")) { totalInteractive++; }
 		for(Element img : getElementsByTag("img")) { totalImg++; }
 		for(Element form : getElementsByTag("form")) { totalForm++; }
-		for(Element option : getElementsByTag("option")) { totalOption++; }
 		for(Element table : getElementsByTag("table")) { totalTable++; }
 		for(Element div : getElementsByTag("div")) { totalDiv++; }
 		for(Element link : getElementsByTag("link")) { totalLink++; }
@@ -93,6 +90,8 @@ public class JSoupParser {
 	@SuppressWarnings("unused")
 	private static void traverse(Element element) {
 		float currentHeight = domLevel; 
+		element.attr("domHeight", Float.toString(domLevel));
+		
 		List<Element> es = element.children();
 		if(es.isEmpty() && domLevel > maxHeight)
 			maxHeight = domLevel;
@@ -101,7 +100,6 @@ public class JSoupParser {
 
 		for(int i = 0; i < es.size(); i++) {
 			Element e = es.get(i);
-			e.attr("domHeight", Float.toString(domLevel));
 			
 			float eHtmlLength = e.html().length();
 			float innerHtml = eHtmlLength/htmlLength;
@@ -136,41 +134,23 @@ public class JSoupParser {
 			}
 			for(Element p : e.getElementsByTag("p")) { pNum++; }
 
-			if(totalInteractive > 0)
-				e.attr("interactiveNum", Float.toString(interactiveNum/totalInteractive));
-			else 
-				e.attr("interactiveNum", "0.0");
+			interactiveNum = interactiveNum > 0 ? interactiveNum/totalInteractive : 0;
+			imgNum = imgNum > 0 ? imgNum/totalImg : 0;
+			formNum = formNum > 0 ? formNum/totalForm : 0;
+			tableNum = tableNum > 0 ? tableNum/totalTable : 0;
+			divNum = divNum > 0 ? divNum/totalDiv : 0;
+			linkNum = linkNum > 0 ? linkNum/totalLink : 0;
+			float linkToText = e.text().length() > 0 ? linkTextLength/e.text().length() : 0;
+			pNum = pNum > 0 ? pNum/totalP : 0;
 			
-			if(totalImg > 0)
-				e.attr("imgNum", Float.toString(imgNum/totalImg));
-			else 
-				e.attr("imgNum", "0.0");
-			
-			if(totalForm > 0)
-				e.attr("formNum", Float.toString(imgNum/totalForm));
-			else 
-				e.attr("formNum", "0.0");
-			
-			if(totalTable > 0)
-				e.attr("tableNum", Float.toString(imgNum/totalTable));
-			else 
-				e.attr("tableNum", "0.0");
-			
-			if(totalDiv > 0)
-				e.attr("divNum", Float.toString(imgNum/totalDiv));
-			else 
-				e.attr("divNum", "0.0");
-			
-			if(totalLink > 0)
-				e.attr("linkNum", Float.toString(imgNum/totalLink));
-			else 
-				e.attr("linkNum", "0.0");
-
-			if(e.text().length() > 0)
-				e.attr("linkToText", Float.toString(linkTextLength/e.text().length()));
-			else 
-				e.attr("linkToText", "0.0");
-			e.attr("pNum", Float.toString(pNum/totalP));
+			e.attr("interactiveNum", Float.toString(interactiveNum));
+			e.attr("imgNum", Float.toString(imgNum));
+			e.attr("formNum", Float.toString(formNum));
+			e.attr("tableNum", Float.toString(tableNum));
+			e.attr("divNum", Float.toString(divNum));
+			e.attr("linkNum", Float.toString(linkNum));
+			e.attr("linkToText", Float.toString(linkToText));
+			e.attr("pNum", Float.toString(pNum));
 			
 			traverse(e);
 		}
@@ -187,8 +167,10 @@ public class JSoupParser {
 	
 		parser.count();
 		traverse(body);		
-		for(Element e : body.getAllElements()) 
-			e.attr("domHeight", Float.toString(domLevel/maxHeight));
+		for(Element e : body.getAllElements()) {
+			float eDomLevel = Float.parseFloat(e.attr("domHeight"));
+			e.attr("domHeight", Float.toString(eDomLevel/maxHeight));
+		}
 	
 		FileOutputStream fout = new FileOutputStream("out.html");
 		fout.write(body.outerHtml().getBytes());
