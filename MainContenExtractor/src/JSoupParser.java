@@ -110,14 +110,15 @@ public class JSoupParser {
 			float innerText = eTextLength/textLength;
 			e.attr("innerText", Float.toString(innerText));
 			
-			int interactiveNum = 0;
-			int imgNum = 0;
-			int formNum = 0;
-			int optionNum = 0;
-			int tableNum = 0;
-			int divNum = 0;
-			int linkNum = 0;
-			int pNum = 0;
+			float interactiveNum = 0;
+			float imgNum = 0;
+			float formNum = 0;
+			float optionNum = 0;
+			float tableNum = 0;
+			float divNum = 0;
+			float linkNum = 0;
+			float linkTextLength = 0;
+			float pNum = 0;
 			
 			for(Element select : e.getElementsByTag("select")) { interactiveNum++; }
 			for(Element input : e.getElementsByTag("input")) { interactiveNum++; }
@@ -126,7 +127,10 @@ public class JSoupParser {
 			for(Element option : e.getElementsByTag("option")) { optionNum++; }
 			for(Element table : e.getElementsByTag("table")) { tableNum++; }
 			for(Element div : e.getElementsByTag("div")) { divNum++; }
-			for(Element link : e.getElementsByTag("link")) { linkNum++; }
+			for(Element link : e.getElementsByTag("link")) { 
+				linkNum++;
+				linkTextLength = link.text().length();
+			}
 			for(Element p : e.getElementsByTag("p")) { pNum++; }
 
 			e.attr("interactiveNum", Float.toString(interactiveNum/totalInteractive));
@@ -136,7 +140,7 @@ public class JSoupParser {
 			e.attr("tableNum", Float.toString(tableNum/totalTable));
 			e.attr("divNum", Float.toString(divNum/totalDiv));
 			e.attr("linkNum", Float.toString(linkNum/totalLink));
-			e.attr("linkToText", Float.toString(linkNum/e.text().length()));
+			e.attr("linkToText", Float.toString(linkTextLength/e.text().length()));
 			e.attr("pNum", Float.toString(pNum/totalP));
 			
 			traverse(e);
