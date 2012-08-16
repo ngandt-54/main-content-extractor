@@ -86,6 +86,7 @@ public class JSoupParser {
 		for(Element table : getElementsByTag("table")) { totalTable++; }
 		for(Element div : getElementsByTag("div")) { totalDiv++; }
 		for(Element link : getElementsByTag("link")) { totalLink++; }
+		for(Element a : getElementsByTag("a")) { totalLink++; }
 		for(Element p : getElementsByTag("p")) { totalP++; }
 	}
 	
@@ -128,7 +129,6 @@ public class JSoupParser {
 			for(Element link : e.getElementsByTag("link")) { 
 				linkNum++;
 				linkTextLength += link.text().length();
-				System.out.println(linkTextLength);
 			}
 			for(Element a : e.getElementsByTag("a")) { 
 				linkNum++;
@@ -136,13 +136,40 @@ public class JSoupParser {
 			}
 			for(Element p : e.getElementsByTag("p")) { pNum++; }
 
-			e.attr("interactiveNum", Float.toString(interactiveNum/totalInteractive));
-			e.attr("imgNum", Float.toString(imgNum/totalImg));
-			e.attr("formNum", Float.toString(formNum/totalForm));
-			e.attr("tableNum", Float.toString(tableNum/totalTable));
-			e.attr("divNum", Float.toString(divNum/totalDiv));
-			e.attr("linkNum", Float.toString(linkNum/totalLink));
-			e.attr("linkToText", Float.toString(linkTextLength/e.text().length()));
+			if(totalInteractive > 0)
+				e.attr("interactiveNum", Float.toString(interactiveNum/totalInteractive));
+			else 
+				e.attr("interactiveNum", "0.0");
+			
+			if(totalImg > 0)
+				e.attr("imgNum", Float.toString(imgNum/totalImg));
+			else 
+				e.attr("imgNum", "0.0");
+			
+			if(totalForm > 0)
+				e.attr("formNum", Float.toString(imgNum/totalForm));
+			else 
+				e.attr("formNum", "0.0");
+			
+			if(totalTable > 0)
+				e.attr("tableNum", Float.toString(imgNum/totalTable));
+			else 
+				e.attr("tableNum", "0.0");
+			
+			if(totalDiv > 0)
+				e.attr("divNum", Float.toString(imgNum/totalDiv));
+			else 
+				e.attr("divNum", "0.0");
+			
+			if(totalLink > 0)
+				e.attr("linkNum", Float.toString(imgNum/totalLink));
+			else 
+				e.attr("linkNum", "0.0");
+
+			if(e.text().length() > 0)
+				e.attr("linkToText", Float.toString(linkTextLength/e.text().length()));
+			else 
+				e.attr("linkToText", "0.0");
 			e.attr("pNum", Float.toString(pNum/totalP));
 			
 			traverse(e);
