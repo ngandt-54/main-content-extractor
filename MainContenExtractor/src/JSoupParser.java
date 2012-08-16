@@ -136,6 +136,7 @@ public class JSoupParser {
 			e.attr("tableNum", Float.toString(tableNum/totalTable));
 			e.attr("divNum", Float.toString(divNum/totalDiv));
 			e.attr("linkNum", Float.toString(linkNum/totalLink));
+			e.attr("linkToText", Float.toString(linkNum/e.text().length()));
 			e.attr("pNum", Float.toString(pNum/totalP));
 			
 			traverse(e);
