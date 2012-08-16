@@ -113,7 +113,6 @@ public class JSoupParser {
 			float interactiveNum = 0;
 			float imgNum = 0;
 			float formNum = 0;
-			float optionNum = 0;
 			float tableNum = 0;
 			float divNum = 0;
 			float linkNum = 0;
@@ -124,19 +123,22 @@ public class JSoupParser {
 			for(Element input : e.getElementsByTag("input")) { interactiveNum++; }
 			for(Element img : e.getElementsByTag("img")) { imgNum++; }
 			for(Element form : e.getElementsByTag("form")) { formNum++; }
-			for(Element option : e.getElementsByTag("option")) { optionNum++; }
 			for(Element table : e.getElementsByTag("table")) { tableNum++; }
 			for(Element div : e.getElementsByTag("div")) { divNum++; }
 			for(Element link : e.getElementsByTag("link")) { 
 				linkNum++;
-				linkTextLength = link.text().length();
+				linkTextLength += link.text().length();
+				System.out.println(linkTextLength);
+			}
+			for(Element a : e.getElementsByTag("a")) { 
+				linkNum++;
+				linkTextLength += a.text().length();
 			}
 			for(Element p : e.getElementsByTag("p")) { pNum++; }
 
 			e.attr("interactiveNum", Float.toString(interactiveNum/totalInteractive));
 			e.attr("imgNum", Float.toString(imgNum/totalImg));
 			e.attr("formNum", Float.toString(formNum/totalForm));
-			e.attr("optionNum", Float.toString(optionNum/totalOption));
 			e.attr("tableNum", Float.toString(tableNum/totalTable));
 			e.attr("divNum", Float.toString(divNum/totalDiv));
 			e.attr("linkNum", Float.toString(linkNum/totalLink));
@@ -164,6 +166,6 @@ public class JSoupParser {
 		FileOutputStream fout = new FileOutputStream("out.html");
 		fout.write(body.outerHtml().getBytes());
 		
-		System.out.println(body.outerHtml());
+//		System.out.println(body.outerHtml());
 	}
 }
