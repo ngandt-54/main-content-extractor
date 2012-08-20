@@ -1,3 +1,5 @@
+package parser;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -172,7 +174,7 @@ public class JSoupParser {
 			e.attr("domHeight", Float.toString(eDomLevel/maxHeight));
 		}
 	
-		FileOutputStream fout = new FileOutputStream("out.html");
+		FileOutputStream fout = new FileOutputStream("input.html");
 		fout.write(body.outerHtml().getBytes());
 		
 //		System.out.println(body.outerHtml());
