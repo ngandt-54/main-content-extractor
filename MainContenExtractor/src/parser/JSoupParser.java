@@ -1,7 +1,6 @@
 package parser;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.List;
 
@@ -160,23 +159,30 @@ public class JSoupParser {
 		domLevel = currentHeight;
 	}
 	
-	public static void main(String[] args) throws IOException{
-		JSoupParser parser = new JSoupParser();
-		parser.parseURL("http://vnexpress.net/gl/xa-hoi/2012/04/giay-phut-lua-bao-trum-tiem-vang-lam-4-nguoi-chet/");
-		Element body = parser.getBody();
+	public String process(String url) throws IOException {
+		parseURL(url);
+		Element body = getBody();
 		textLength = body.text().length();
 		htmlLength = body.html().length();
 	
-		parser.count();
+		count();
 		traverse(body);		
 		for(Element e : body.getAllElements()) {
 			float eDomLevel = Float.parseFloat(e.attr("domHeight"));
 			e.attr("domHeight", Float.toString(eDomLevel/maxHeight));
 		}
-	
-		FileOutputStream fout = new FileOutputStream("input.html");
-		fout.write(body.outerHtml().getBytes());
-		
-//		System.out.println(body.outerHtml());
+		return body.outerHtml();
 	}
+	
+//	public static void main(String[] args) {
+//		JSoupParser parser = new JSoupParser();
+//		String url ="http://vnexpress.net/gl/xa-hoi/2012/04/giay-phut-lua-bao-trum-tiem-vang-lam-4-nguoi-chet/"; 
+//		try {
+//			FileOutputStream fout = new FileOutputStream("input.html");
+//			fout.write(parser.process(url).getBytes());
+//			fout.close();
+//		} catch (IOException e) {
+//			e.printStackTrace();
+//		}
+//	}
 }
