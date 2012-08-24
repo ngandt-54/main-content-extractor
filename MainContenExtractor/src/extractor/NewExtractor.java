@@ -2,11 +2,7 @@ package extractor;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.List;
-
 import org.jsoup.nodes.Element;
-import org.jsoup.nodes.Node;
-import org.jsoup.select.Elements;
 
 import parser.JSoupParser;
 
@@ -27,12 +23,14 @@ public class NewExtractor {
 		Float linkNum = getFloatAttr(e, "linknum");
 		Float pnum = getFloatAttr(e, "pnum");
 		Float linkToText = getFloatAttr(e, "linktotext");
+		String tag = e.tagName();
 
-		String tag = e.attr("tagname");
+		System.out.println(e.tagName() + " " + domHeight + " " + innerHtml);
+		
 		
 		if(innerText <= 0.366505) {
 
-			if(getFloatAttr(e, "domheight") <= 0.083333) {
+			if(domHeight <= 0.083333) {
 				if(tag.equals("#root") || tag.equals("html") || tag.equals("head")
 						|| tag.equals("body") || tag.equals("a") || tag.equals("input")) { // undefined
 					for(Element child : e.children())
@@ -46,7 +44,7 @@ public class NewExtractor {
 						extract(child);
 				}
 				
-			} else if(getFloatAttr(e, "domheight") <= 0.230769) {
+			} else if(domHeight <= 0.230769) {
 				if(innerHtml <= 0.000126) {
 					if(getFloatAttr(e, "interactivenum") <= 0.034483) {
 						if(tag.equals("#root") || tag.equals("html") || tag.equals("head") || tag.equals("body") 
@@ -119,9 +117,9 @@ public class NewExtractor {
 				}
 				
 			} else {
-				if(getFloatAttr(e, "pnum") <= 0) {
-					if(getFloatAttr(e, "linknum") <= 0) {
-						if(getFloatAttr(e, "innertext") <= 0.003174) {
+				if(pnum <= 0) {
+					if(linkNum <= 0) {
+						if(innerText <= 0.003174) {
 							if(tag.equals("#root") || tag.equals("html") || tag.equals("head")) {
 								for(Element child : e.children())
 									extract(child);
