@@ -20,7 +20,7 @@ public class autoTag {
 			}
 		
 		for(Element e : body.getAllElements())
-			if(e.attr("domheight").equals(domHeight))
+			if(e.attr("domheight").equals(domHeight) && e.attr("species").equals(""))
 				e.attr("species", "noisy");
 	}
 
