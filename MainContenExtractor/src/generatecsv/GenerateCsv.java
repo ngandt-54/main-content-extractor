@@ -41,7 +41,7 @@ public class GenerateCsv {
 			File file = new File(outfile);
 			FileOutputStream fout = new FileOutputStream(file,true);
 
-			String header = "TagName,domHeight,innerHtml,innerText,interactiveNum," +
+			String header = "TagName,type,domHeight,innerHtml,innerText,interactiveNum," +
 					"ImgNum,FormNum,TableNum,DivNum,linkNum,Pnum,linkToText,species" + 
 					"\n";
 			if(file.length()==0){
@@ -50,26 +50,26 @@ public class GenerateCsv {
 			for(Element e : doc.getAllElements()) {
 				if(!e.attr("Species").equals("")) {
 					// ghi cac thuoc tinh tuong ung ra file csv
-					String attr =  e.tagName() + "," + e.attr("domheight") + ","
-							+ e.attr("innerhtml") + "," + e.attr("innertext") + ","
-							+ e.attr("interactivenum") + "," + e.attr("imgnum") + ","
-							+ e.attr("formnum") + "," + e.attr("tablenum") + ","
-							+ e.attr("divnum") + "," + e.attr("linknum") + ","
-							+ e.attr("pnum") + "," + e.attr("linktotext") + ","
-							+ e.attr("species") + "\n";
+					String attr =  e.tagName() + "," + e.attr("domheight") + "," 
+							+ e.attr("type") + "," + e.attr("innerhtml") + "," 
+							+ e.attr("innertext") + ","	+ e.attr("interactivenum") + ","
+							+ e.attr("imgnum") + "," + e.attr("formnum") + ","
+							+ e.attr("tablenum") + "," + e.attr("divnum") + "," 
+							+ e.attr("linknum") + "," + e.attr("pnum") + "," 
+							+ e.attr("linktotext") + "," + e.attr("species") + "\n";
 					fout.write(attr.getBytes());
 				}
 			}
 			
 			for(Element e : doc2.getAllElements()) {
 				if(!e.attr("Species").equals("")) {
-					String attr =  e.tagName() + "," + e.attr("domheight") + ","
-							+ e.attr("innerhtml") + "," + e.attr("innertext") + ","
-							+ e.attr("interactivenum") + "," + e.attr("imgnum") + ","
-							+ e.attr("formnum") + "," + e.attr("tablenum") + ","
-							+ e.attr("divnum") + "," + e.attr("linknum") + ","
-							+ e.attr("pnum") + "," + e.attr("linktotext") + ","
-							+ "undefined" + "\n";
+					String attr =  e.tagName() + "," + e.attr("domheight") + "," 
+							+ e.attr("type") + "," + e.attr("innerhtml") + "," 
+							+ e.attr("innertext") + ","	+ e.attr("interactivenum") + ","
+							+ e.attr("imgnum") + "," + e.attr("formnum") + ","
+							+ e.attr("tablenum") + "," + e.attr("divnum") + "," 
+							+ e.attr("linknum") + "," + e.attr("pnum") + "," 
+							+ e.attr("linktotext") + "," + "undefined" + "\n";
 					fout.write(attr.getBytes());
 				}
 			}
