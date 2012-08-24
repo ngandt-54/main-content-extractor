@@ -21,7 +21,6 @@ public class GenerateCsv {
 			addTag(child);
 	}
 	
-	
 	public static void main(String[] args) {
 		String fname = "D:/OUT/24h6.html";
 		String fname2 = "D:/OUT2/24h6.html";
@@ -48,7 +47,7 @@ public class GenerateCsv {
 			if(file.length()==0){
 				fout.write(header.getBytes());
 			}
-			for(Element e : doc2.getAllElements()) {
+			for(Element e : doc.getAllElements()) {
 				if(!e.attr("Species").equals("")) {
 					// ghi cac thuoc tinh tuong ung ra file csv
 					String attr =  e.tagName() + "," + e.attr("domheight") + ","
@@ -60,7 +59,10 @@ public class GenerateCsv {
 							+ e.attr("species") + "\n";
 					fout.write(attr.getBytes());
 				}
-				else {
+			}
+			
+			for(Element e : doc2.getAllElements()) {
+				if(!e.attr("Species").equals("")) {
 					String attr =  e.tagName() + "," + e.attr("domheight") + ","
 							+ e.attr("innerhtml") + "," + e.attr("innertext") + ","
 							+ e.attr("interactivenum") + "," + e.attr("imgnum") + ","
