@@ -160,8 +160,8 @@ public class JSoupParser {
 		domLevel = currentHeight;
 	}
 	
-	public String process(String url) throws IOException {
-		parseURL(url);
+	public String process(String infile) throws IOException {
+		parseFile(infile);
 		Element body = getBody();
 		textLength = body.text().length();
 		htmlLength = body.html().length();

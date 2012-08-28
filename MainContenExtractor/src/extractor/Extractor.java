@@ -1,6 +1,8 @@
 package extractor;
 
 import java.io.FileOutputStream;
+import java.io.IOException;
+
 import org.jsoup.nodes.Element;
 
 import parser.JSoupParser;
@@ -10,9 +12,6 @@ public class Extractor {
 	public void extract(Element element) throws Exception  {
 		for(Element e : element.children()) {
 			
-			/** TODO 
-			 * Edit mang string nay sao cho so phan tu va thu tu cac phan tu 
-			 */
 			// tuong ung voi danh sach Attributes trong file model. 
 			String[] attrs = {e.tagName(), e.attr("domheight"), e.attr("innerhtml"), 
 					e.attr("innertext"), e.attr("interactivenum"), e.attr("imgnum"), 
@@ -38,19 +37,32 @@ public class Extractor {
 			clean(element);
 	}
 	
-	public static void main(String[] args) throws Exception {
-		JSoupParser parser = new JSoupParser();
-		String url ="http://dantri.com.vn/c20/s20-633520/bo-gtvt-siet-chat-quy-dinh-mau-son-xe-taxi.htm";
-		parser.process(url);
-		Element body = parser.getBody();
-		
-		Extractor extractor = new Extractor();
-		extractor.extract(body);
-		extractor.clean(body);
-
-		FileOutputStream fout = new FileOutputStream("output.html");
-		fout.write(body.outerHtml().getBytes());
-		fout.close();
+	public static void main(String[] args) {
+		for(int i = 0; i < 15; i++)
+			for(int j = 0; j < 100; j++) {
+				try {
+					JSoupParser parser = new JSoupParser();
+					String infile ="data/crawl/html/page" + i + "/url" + j + ".html";
+						parser.process(infile);
+					Element body = parser.getBody();
+					
+					Extractor extractor = new Extractor();
+					try {
+						extractor.extract(body);
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+					extractor.clean(body);
+					String outfile = "data/mloutput/page" + i + "/text" + j;
+					FileOutputStream fout = new FileOutputStream(outfile);
+					fout.write(body.text().getBytes());
+					fout.close();
+				} catch (IOException e) {
+//					e.printStackTrace();
+					continue;
+				}
+				
+			}
 	}
 }
 
